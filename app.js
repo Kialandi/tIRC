@@ -30,11 +30,10 @@ var io = require('socket.io')(http);
 
 //sets up mongo for database management
 var mongoose = require('mongoose'),
-	User = require('./model/db');
+	User = require('./model/schema/userSchema');//add more after this is you need more schemas
 
 mongoose.Promise = global.Promise;
 
-var connStr = "mongodb://localhost:" + appEnv.port + "/test";//"/mongoose-bcrypt";
 var connStr = "mongodb://tirc:tircpwpurdue@ds117348.mlab.com:17348/tircdb";
 
 var db = mongoose.connect(connStr, function(err) {
@@ -42,8 +41,8 @@ var db = mongoose.connect(connStr, function(err) {
 	console.log('Successfully connected to MongoDB');
 });
 
-var userInput = "userDICK";//accepts user input
-var pwInput = "passwordFUCK";//accepts user input
+var userInput = "user";//accepts user input
+var pwInput = "password";//accepts user input
 
 //create user
 var newUser = new User({
@@ -78,20 +77,25 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 
 var numUsers = 0;
 
+app.get('/', function(req, res) {
+	res.sendfile('index.html');
+});
+
 io.emit('some event', { for: 'everyone' });
 
 io.on('connection', function(socket) {
+	console.log('a user connected');
 	var addedUser = false;
-
-    socket.on('chat message', function(msg) {
-      io.emit('chat message', msg);
-    });
+	
+//    socket.on('chat message', function(msg) {
+  //    io.emit('chat message', msg);
+    //});
 
 	socket.on('new message', function(data) {
-		socket.broadcast.emit('new message', {
-			username: socket.username,
-			message: data
-		});
+		io.emit('new message', data);//{
+	//		username: socket.username,
+	//		message: data
+	//	});
 	});
 
 	socket.on('add user', function(username) {
@@ -134,3 +138,8 @@ io.on('connection', function(socket) {
 		}
 	});
 });
+
+http.listen(appEnv.port, function() {
+	console.log('listening on *:' + appEnv.port);
+});
+
