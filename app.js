@@ -42,8 +42,8 @@ var db = mongoose.connect(connStr, function(err) {
 	console.log('Successfully connected to MongoDB');
 });
 
-var userInput = "user";//accepts user input
-var pwInput = "password";//accepts user input
+var userInput = "userDICK";//accepts user input
+var pwInput = "passwordFUCK";//accepts user input
 
 //create user
 var newUser = new User({
