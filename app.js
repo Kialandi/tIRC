@@ -30,11 +30,14 @@ var io = require('socket.io')(http);
 
 //sets up mongo for database management
 var mongoose = require('mongoose'),
-	user = require('./model/db');
+	User = require('./model/db');
 
-var connStr = "mongodb://localhost:" + appEnv.port + "/mongoose-bcrypt";
+mongoose.Promise = global.Promise;
 
-mongoose.connect(connStr, function(err) {
+var connStr = "mongodb://localhost:" + appEnv.port + "/test";//"/mongoose-bcrypt";
+var connStr = "mongodb://tirc:tircpwpurdue@ds117348.mlab.com:17348/tircdb";
+
+var db = mongoose.connect(connStr, function(err) {
 	if (err) throw err;
 	console.log('Successfully connected to MongoDB');
 });
