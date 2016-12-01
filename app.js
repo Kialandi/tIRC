@@ -15,6 +15,8 @@ var cfenv = require('cfenv');
 // create a new express server
 var app = express();
 
+var http = require('http').Server(app);
+
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
 
@@ -22,21 +24,23 @@ app.use(express.static(__dirname + '/public'));
 var appEnv = cfenv.getAppEnv();
 
 //creates the server
-var io = require('http').createServer(app);
+//var io = require('http').createServer(app);
+
+var io = require('socket.io')(http);
 
 //sets up mongo for database management
 var mongoose = require('mongoose'),
 	user = require('./model/db');
 
-var connStr = "mongodb://localhost:" + appEnv.port "/mongoose-bcrypt";
+var connStr = "mongodb://localhost:" + appEnv.port + "/mongoose-bcrypt";
 
 mongoose.connect(connStr, function(err) {
 	if (err) throw err;
 	console.log('Successfully connected to MongoDB');
 });
 
-var userInput = ;//accepts user input
-var pwInput = ;//accepts user input
+var userInput = "user";//accepts user input
+var pwInput = "password";//accepts user input
 
 //create user
 var newUser = new User({
@@ -71,8 +75,14 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 
 var numUsers = 0;
 
+io.emit('some event', { for: 'everyone' });
+
 io.on('connection', function(socket) {
 	var addedUser = false;
+
+    socket.on('chat message', function(msg) {
+      io.emit('chat message', msg);
+    });
 
 	socket.on('new message', function(data) {
 		socket.broadcast.emit('new message', {
