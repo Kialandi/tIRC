@@ -21,7 +21,47 @@ app.use(express.static(__dirname + '/public'));
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
+//creates the server
 var io = require('http').createServer(app);
+
+//sets up mongo for database management
+var mongoose = require('mongoose'),
+	user = require('./model/db');
+
+var connStr = "mongodb://localhost:" + appEnv.port "/mongoose-bcrypt";
+
+mongoose.connect(connStr, function(err) {
+	if (err) throw err;
+	console.log('Successfully connected to MongoDB');
+});
+
+var userInput = ;//accepts user input
+var pwInput = ;//accepts user input
+
+//create user
+var newUser = new User({
+	username: userInput,
+	password: pwInput
+});
+
+newUser.save(function(err) {
+	if (err) throw err;
+	
+	//fetch user
+	User.findOne({ username: userInput }, function(err, user) {
+		if(err) throw err;
+		
+		//check pw
+		user.comparePassword(pwInput, function(err, isMatch) {
+			if (err) throw err;
+			console.log(pwInput, isMatch);//password is a match
+			if (isMatch)
+				return true;
+			else return false;
+		});
+
+	});
+});
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
