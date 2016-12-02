@@ -41,7 +41,7 @@ var db = mongoose.connect(connStr, function(err) {
 	console.log('Successfully connected to MongoDB');
 });
 
-var userInput = "user";//accepts user input
+var userInput = "u2112ser";//accepts user input
 var pwInput = "password";//accepts user input
 
 //create user
@@ -93,9 +93,9 @@ io.on('connection', function(socket) {
 
 	socket.on('new message', function(data) {
 		io.emit('new message', data);//{
-			username: socket.username,
-			message: data
-		});
+//			username: socket.username,
+//			message: data
+//		});
 	});
 
 	socket.on('add user', function(username) {
