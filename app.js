@@ -43,7 +43,7 @@ var db = mongoose.connect(connStr, function(err) {
 var isMatch;
 
 //implement compare password
-app.post('/login', function(req, res) {
+app.post('/register', function(req, res) {
 
   var userInput = req.body.user;
   var pwInput = req.body.password;
@@ -56,8 +56,16 @@ app.post('/login', function(req, res) {
   });
 
   newUser.save(function(err) {
-    if (err) throw err;
+    if (err) {
+	console.log("Username: " + userInput + " already exists!");
+    	res.end("invalid");
+    }
 
+    else {
+    	console.log("Username: " + userInput + " accepted!");
+	res.end("valid");
+    }
+/*
     //fetch user
     User.findOne({ username: userInput }, function(err, user) {
       if (err) throw err;
@@ -72,8 +80,8 @@ app.post('/login', function(req, res) {
       //	return true;
       //else return false;
       });
-      });*/
-  });
+      });
+  });*/
 
 
   /*  if (isMatch) {
@@ -84,20 +92,38 @@ app.post('/login', function(req, res) {
       res.sendfile('index.html');
       }*/
   });
-  res.end("yes");
 });
 
-//implement adding to db
-app.post('/register', function(req, res) {
+//implement password check
+app.post('/login', function(req, res) {
   var userInput = req.body.user;
   var pwInput = req.body.password;
 
-  console.log("username = " + userInput + ", password is " + pwInput);
+  console.log("username: " + userInput + ", password: " + pwInput);
   User.findOne({ username: userInput }, function(err, user) {
-    if (err) throw err;
-
+    if (err) {//check if username exists
+	console.log("username: " + userInput + " doesn't exist!");
+	res.end("DNE");
+    }
+    else { //if it exists, check the password
+    	user.comparePassword(pwInput, function(err, isMatch) {
+    		if (err) { //if invalid pw
+			console.log("Something went wrong with " + userInput + "'s request");
+			res.end("BIGERROR");
+		}
+		else {//if (isMatch) { //if valid go to chat
+			console.log("Password accepted for " + userInput);
+			res.end("success");
+		} 
+/*		else if (!isMatch) {
+			console.log("Incorrect password for " + userInput);
+			res.end("wrongPW");
+		}*/
+	});
+    }
+  });
     //check pw
-    user.comparePassword(pwInput, function(err, isMatch) {
+/*    user.comparePassword(pwInput, function(err, isMatch) {
       if (err) throw err;
 
       console.log(pwInput, isMatch);//password is a match
@@ -109,9 +135,8 @@ app.post('/register', function(req, res) {
         res.end("no");//register failed, user already exists
         res.sendfile('index.html');
       }
-    });
+    });*/
   });
-});
 
 // start server on the specified port and binding host
 //app.listen(appEnv.port, '0.0.0.0', function() {
