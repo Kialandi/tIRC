@@ -65,32 +65,6 @@ app.post('/register', function(req, res) {
     	console.log("Username: " + userInput + " accepted!");
 	res.end("valid");
     }
-/*
-    //fetch user
-    User.findOne({ username: userInput }, function(err, user) {
-      if (err) throw err;
-
-      //check pw
-      /*      user.comparePassword(pwInput, function(err, isMatch) {
-              if (err) throw err;
-
-              console.log(pwInput, isMatch);//password is a match
-
-      //if (isMatch)
-      //	return true;
-      //else return false;
-      });
-      });
-  });*/
-
-
-  /*  if (isMatch) {
-      res.end("yes");//login success proceed to chat
-      res.sendfile('chat.html');
-      } else {
-      res.end("no");//login failed, credentials invalid or user does not exist
-      res.sendfile('index.html');
-      }*/
   });
 });
 
@@ -139,10 +113,10 @@ app.post('/login', function(req, res) {
   });
 
 // start server on the specified port and binding host
-//app.listen(appEnv.port, '0.0.0.0', function() {
+app.listen(appEnv.port, '0.0.0.0', function() {
 // print a message when the server starts listening
-//  console.log("server starting on " + appEnv.url + ", port number " + appEnv.port);
-//});
+	console.log("server starting on " + appEnv.url + ", port number " + appEnv.port);
+});
 
 var numUsers = 0;
 
@@ -207,8 +181,8 @@ socket.on('disconnect', function() {
   }
 });
 });
-
+/*
 http.listen(8080, function() {
   console.log('listening on *:' + 8080);
 });
-
+*/
