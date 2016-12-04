@@ -40,9 +40,8 @@ var db = mongoose.connect(connStr, function(err) {
 
 var isMatch;
 
-//implement compare password
+//implement user registration
 app.post('/register', function(req, res) {
-
 		var userInput = req.body.user;
 		var pwInput = req.body.password;
 		console.log("username = " + userInput + ", password is " + pwInput);
@@ -64,7 +63,7 @@ app.post('/register', function(req, res) {
 		});
 });
 
-//implement password check
+//implement password check for login
 app.post('/login', function(req, res) {
 	var userInput = req.body.user;
 	var pwInput = req.body.password;
