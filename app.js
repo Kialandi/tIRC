@@ -39,6 +39,7 @@ var db = mongoose.connect(connStr, function(err) {
 		});
 
 var isMatch;
+var userLogin;
 
 //implement user registration
 app.post('/register', function(req, res) {
@@ -48,7 +49,7 @@ app.post('/register', function(req, res) {
 		var newUser = new User({
 			username: userInput,
 			password: pwInput
-			});
+		});
 
 		newUser.save(function(err) {
 			if (err) {
@@ -58,6 +59,7 @@ app.post('/register', function(req, res) {
 
 			else {
 				console.log("Username: " + userInput + " accepted!");
+				userLogin = userInput;
 				res.end("valid");
 			}
 		});
@@ -71,10 +73,8 @@ app.post('/login', function(req, res) {
 	console.log("Login: username: " + userInput);// + ", password: " + pwInput);
 	User.findOne({ username: userInput }, function(err, user) {
 		if (err) {//check if query success
-			//console.log("username: " + userInput + " doesn't exist!");
 			console.log("Query to database failed!");
 			res.end("BIGERROR");
-			//res.end("DNE");
 		}
 		else { //query success
 			if (user) {//if user exists
@@ -85,6 +85,7 @@ app.post('/login', function(req, res) {
 					}
 					else if (isMatch) {//if valid pw
 						console.log(userInput + ": logged in");
+						userLogin = userInput;
 						res.end("success");
 					} 
 					else if (!isMatch) {//if invalid pw
@@ -100,7 +101,13 @@ app.post('/login', function(req, res) {
 		}
 	});
 });
-
+/*
+app.post('/adduser', function(req, res) {
+	var userInput = req.body.user;
+	res.end("added");//reply with added to client
+	
+});
+*/
 /*
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
@@ -111,68 +118,73 @@ console.log("server starting on " + appEnv.url + ", port number " + appEnv.port)
 var numUsers = 0;
 
 app.get('/', function(req, res) {
-		res.sendfile('index.html');
-		});
+	res.sendfile('index.html');
+});
 
 //io.emit('some event', { for: 'everyone' });
 
 io.on('connection', function(socket) {
-		console.log('a user connected');
-		var addedUser = false;
+	console.log(userLogin + ' connected');
+	var addedUser = false;
+	
+	socket.username = userLogin;
+	numUsers++;
+	
+	socket.broadcast.emit('user joined', {
+		username: socket.username,
+		numUser: numUsers
+	});
 
-		//    socket.on('new message', function(msg) {
-		//    io.emit('new message', msg);
-		//});
+	socket.on('new message', function(data) {
+		io.emit('new message', data);//{
+		//			username: socket.username,
+		//			message: data
+		//		});
+	});
 
-		socket.on('new message', function(data) {
-				io.emit('new message', data);//{
-				//			username: socket.username,
-				//			message: data
-				//		});
-		});
-
-socket.on('add user', function(username) {
-		if(addedUser)
-		return;
+	socket.on('add user', function(username) {
+		console.log("add user called");
+/*		if(addedUser)
+			return;
 
 		socket.username = username;
 		numUsers++;
 		addedUser = true;
-		socket.emit('login', {
-			numUsers: numUsers
-		});
+		//		socket.emit('login', {
+		//			numUsers: numUsers
+		//		});
 
 		socket.broadcast.emit('user joined', {
-username: socket.username,
-numUser: numUsers
-});
-		});
+			username: socket.username,
+			numUser: numUsers
+		});*/
+	});
 
-socket.on('typing', function() {
+	socket.on('typing', function() {
 		socket.broadcast.emit('typing', {
-username: socket.username
-});
+			username: socket.username
 		});
+	});
 
-socket.on('stop typing', function() {
+	socket.on('stop typing', function() {
 		socket.broadcast.emit('stop typing', {
-username: socket.username
-});
+			username: socket.username
 		});
+	});
 
-socket.on('disconnect', function() {
+	socket.on('disconnect', function() {
 		if (addedUser) {
-		--numUsers;
+			--numUsers;
 
-		socket.broadcast.emit('user left', {
-username: socket.username,
-numUsers: numUsers
-});
+			socket.broadcast.emit('user left', {
+				username: socket.username,
+				numUsers: numUsers
+			});
 		}
-		});
+	});
 });
 
 http.listen(8080, function() {
-		console.log('listening on *:' + 8080);
-		});
+	console.log('listening on *:' + 8080);
+});
 
