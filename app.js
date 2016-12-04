@@ -12,6 +12,7 @@ var express = require('express');
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
 
+var mongoose = require('mongoose');
 // create a new express server
 var app = express();
 var bodyParser = require("body-parser");
@@ -29,7 +30,7 @@ var appEnv = cfenv.getAppEnv();
 //var io = require('http').createServer(app);
 
 var io = require('socket.io')(http);
-var mongoose = require('moongose.js');
+
 
 //implement compare password
 app.post('/login', function(req, res) {
