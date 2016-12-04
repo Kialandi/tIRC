@@ -12,7 +12,7 @@ var db = mongoose.connect(connStr, function(err) {
 });
 
 
-function sendToDB(userInput, pwInput, isMatch) {
+function sendToDB(userInput, pwInput) {
 	//create user
 	var newUser = new User({
 		username: userInput,
@@ -40,7 +40,7 @@ function sendToDB(userInput, pwInput, isMatch) {
 	});
 }
 
-function checkLogin(userInput, pwInput, isMatch) {
+function checkLogin(userInput, pwInput) {
 	User.findOne({ username: userInput }, function(err, isMatch) {
 		if (err) throw err;
 		

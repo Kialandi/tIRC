@@ -1,9 +1,9 @@
 $(document).ready(function(){
   var user,pass;
-  $("#submit").click(function(){
+  $("#login-submit").click(function(){
     user=$("#login-username").val();
     pass=$("#login-password").val();
-    $.post("/login",{user: user,password: pass}, function(data){
+    $.post("http://localhost:8080/login",{user: user,password: pass}, function(data){
       if(data==='done')
       {
         alert("login success");
