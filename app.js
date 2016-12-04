@@ -29,13 +29,19 @@ var appEnv = cfenv.getAppEnv();
 //var io = require('http').createServer(app);
 
 var io = require('socket.io')(http);
+var mongoose = require('moongose.js');
 
 //implement compare password
 app.post('/login', function(req, res) {
 	var user_name = req.body.user;
 	var password = req.body.password;
 	console.log("username = " + user_name ", password is " + password);
-	res.end("yes");
+	mongoose.sendToDB(user_name, password, success);
+	
+	if (success)
+		res.end("yes");//login success proceed to chat
+	else
+		res.end("no");//login failed, credentials invalid or user does not exist
 });
 
 //implement adding to db
@@ -43,7 +49,12 @@ app.post('/register', function(req, res) {
 	var user_name = req.body.user;
 	var password = req.body.password;
 	console.log("username = " + user_name ", password is " + password);
-	res.end("yes");
+	mongoose.checkLogin(userInput, pwInput, success);
+
+	if (success)
+		res.end("yes");//register success, proceed to chat
+	else
+		res.end("no");//register failed, user already exists
 });
 
 // start server on the specified port and binding host
