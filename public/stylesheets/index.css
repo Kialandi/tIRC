@@ -34,11 +34,17 @@ h1,
 h2,
 h3,
 h4,
-h5,
 h6 {
-  font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
-  font-weight: 200;
+  font-family: 'Helvetica', 'Arial', 'sans-serif';
+  font-weight: 100;
   letter-spacing: 1px;
+}
+
+h5 {
+  font-family: 'Helvetica', 'Arial', 'sans-serif';
+  font-weight: 100;
+  letter-spacing: 1px;
+  text-align: center;
 }
 
 /* extending the background */
@@ -54,20 +60,19 @@ header {
   width: 100%;
   min-height: auto;
   overflow-y: hidden;
-  background: url("../images/bg-pattern.png"), #7b4397;
+  background: url("../images/bg-pattern.png"), #B1810B;
   /* fallback for old browsers */
-  background: url("../images/bg-pattern.png"), -webkit-linear-gradient(to left, #7b4397, #dc2430);
+  background: url("../images/bg-pattern.png"), -webkit-linear-gradient(to left, #403B4A, #E7E9BB);
   /* Chrome 10-25, Safari 5.1-6 */
-  background: url("../images/bg-pattern.png"), linear-gradient(to left, #7b4397, #dc2430);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: url("../images/bg-pattern.png"), linear-gradient(to right, #000000, #B1810B);
   color: white;
 }
 
 /* space between the title and the button (30px) */
 header .header-content .header-content-inner h1 {
   margin-top: 0;
-  margin-bottom: 30px;
-  font-size: 30px;
+  margin-bottom: 0px;
+  font-size: 0px;
 }
 
 
@@ -80,6 +85,7 @@ header .header-content .header-content-inner h1 {
     text-align: left;
     padding: 0;
     height: 100vh;
+    font-size: 25px;
   }
   header .header-content .header-content-inner {
     max-width: none;
@@ -89,12 +95,13 @@ header .header-content .header-content-inner h1 {
     transform: translateY(-50%);
   }
   header .header-content .header-content-inner h1 {
-    font-size: 35px;
+    font-size: 40px;
   }
 }
 @media (min-width: 992px) {
   header .header-content .header-content-inner h1 {
     font-size: 50px;
+	letter-spacing: 3px;
   }
 }
 section {
@@ -104,37 +111,15 @@ section h2 {
   font-size: 50px;
 }
 
-/* "ENTER CHATROOM" button settings */
-.bg-primary {
-  background: #fdcc52;
-  background: -webkit-linear-gradient(#fdcc52, #fdc539);
-  background: linear-gradient(#fdcc52, #fdc539);
-}
-.text-primary {
-  color: #fdcc52;
-}
 .no-gutter > [class*='col-'] {
   padding-right: 0;
   padding-left: 0;
 }
-.btn-outline {
-  color: white;
-  border-color: white;
-  border: 1px solid;
-}
-.btn-outline:hover,
-.btn-outline:focus,
-.btn-outline:active,
-.btn-outline.active {
-  color: white;
-  background-color: #fdcc52;
-  border-color: #fdcc52;
-}
 .btn {
-  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 300px;
+  font-family: 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 0px;
+  border-radius: 10px;
+  padding: 0px;
 }
 .btn-xl {
   padding: 15px 45px;
