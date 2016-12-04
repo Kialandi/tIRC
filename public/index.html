@@ -18,6 +18,9 @@
     <!-- Theme CSS -->
     <link href="stylesheets/index.css" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+    <script src='index.js'></script>
+
   </head>
 
   <body id="page-top">
@@ -36,38 +39,38 @@
             <div class="header-content">
               <div class="header-content-inner">
                 <h1>tIRC - a tenaciousIRC</h1>
-		<h5>David Worley | Sam Yap | Sam Shurina</h5>
+                <h5>David Worley | Sam Yap | Sam Shurina</h5>
               </div>
             </div>
           </div>
           <div class="col-sm-4">
-		<div class="header-content">
+            <div class="header-content">
               <div class="header-content-inner">
-            <form>
-              <div class="form-group">
-                <label for="user">Username:</label>
-                <input type="text" class="form-control" id="login-username">
+                <div class = "divNotForm">
+                  <div class="form-group">
+                    <label for="user">Username:</label>
+                    <input type="text" class="form-control" id="login-username">
+                  </div>
+                  <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="login-password">
+                  </div>
+                  <!--
+                    <button type="submit" class="btn btn-default">Login</button>
+                    <button type="submit" class="btn btn-default">Register</button>
+                  -->
+                  <div class="col-sm-6">
+                    <input type="button" name="login-submit" id="login-submit" class="form-control btn btn-login" value="Log In">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="button" name="register-submit" id="register-submit" class="form-control btn btn-register" value="Register">
+                  </div>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="login-password">
-              </div>
-              <!--
-              <button type="submit" class="btn btn-default">Login</button>
-		<button type="submit" class="btn btn-default">Register</button>
-              -->
-              <div class="col-sm-6">
-              <input type="button" name="login-submit" id="login-submit" class="form-control btn btn-login" value="Log In">
-              </div>
-              <div class="col-sm-6">
-              <input type="button" name="register-submit" id="register-submit" class="form-control btn btn-register" value="Register">
-              </div>
-              </div>
-            </form>
-		</div>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </header>
 
