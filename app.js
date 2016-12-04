@@ -43,11 +43,11 @@ var db = mongoose.connect(connStr, function(err) {
 var isMatch;
 
 //implement compare password
-app.post('/register', function(req, res) {
+app.post('/login', function(req, res) {
 
   var userInput = req.body.user;
   var pwInput = req.body.password;
-  console.log("success");//"username = " +user_name ", password is " +password);
+  console.log("username = " + userInput + ", password is " + pwInput);
   //var success = sendToDB(user_name, password);
 
   var newUser = new User({
@@ -63,30 +63,36 @@ app.post('/register', function(req, res) {
       if (err) throw err;
 
       //check pw
-      user.comparePassword(pwInput, function(err, isMatch) {
-        if (err) throw err;
+      /*      user.comparePassword(pwInput, function(err, isMatch) {
+              if (err) throw err;
 
-        console.log(pwInput, isMatch);//password is a match
+              console.log(pwInput, isMatch);//password is a match
 
-        //if (isMatch)
-        //	return true;
-        //else return false;
+      //if (isMatch)
+      //	return true;
+      //else return false;
       });
-    });
+      });*/
   });
 
-  if (isMatch)
-    res.end("yes");//login success proceed to chat
-  else
-    res.end("no");//login failed, credentials invalid or user does not exist
+
+  /*  if (isMatch) {
+      res.end("yes");//login success proceed to chat
+      res.sendfile('chat.html');
+      } else {
+      res.end("no");//login failed, credentials invalid or user does not exist
+      res.sendfile('index.html');
+      }*/
+  });
+  res.end("yes");
 });
 
 //implement adding to db
-app.post('/login', function(req, res) {
+app.post('/register', function(req, res) {
   var userInput = req.body.user;
   var pwInput = req.body.password;
 
-  console.log("success");//"username = " + user_name ", password is " + password);
+  console.log("username = " + userInput + ", password is " + pwInput);
   User.findOne({ username: userInput }, function(err, user) {
     if (err) throw err;
 
@@ -107,77 +113,77 @@ app.post('/login', function(req, res) {
   });
 });
 
-    // start server on the specified port and binding host
-    //app.listen(appEnv.port, '0.0.0.0', function() {
-    // print a message when the server starts listening
-    //  console.log("server starting on " + appEnv.url + ", port number " + appEnv.port);
-    //});
+// start server on the specified port and binding host
+//app.listen(appEnv.port, '0.0.0.0', function() {
+// print a message when the server starts listening
+//  console.log("server starting on " + appEnv.url + ", port number " + appEnv.port);
+//});
 
-    var numUsers = 0;
+var numUsers = 0;
 
-    app.get('/', function(req, res) {
-      res.sendfile('index.html');
+app.get('/', function(req, res) {
+  res.sendfile('index.html');
+});
+
+io.emit('some event', { for: 'everyone' });
+
+io.on('connection', function(socket) {
+  console.log('a user connected');
+  var addedUser = false;
+
+  //    socket.on('chat message', function(msg) {
+  //    io.emit('chat message', msg);
+  //});
+
+  socket.on('new message', function(data) {
+    io.emit('new message', data);//{
+    //			username: socket.username,
+    //			message: data
+    //		});
+  });
+
+socket.on('add user', function(username) {
+  if(addedUser)
+    return;
+
+  socket.username = username;
+  numUsers++;
+  addedUser = true;
+  socket.emit('login', {
+    numUsers: numUsers
+  });
+
+  socket.broadcast.emit('user joined', {
+    username: socket.username,
+    numUser: numUsers
+  });
+});
+
+socket.on('typing', function() {
+  socket.broadcast.emit('typing', {
+    username: socket.username
+  });
+});
+
+socket.on('stop typing', function() {
+  socket.broadcast.emit('stop typing', {
+    username: socket.username
+  });
+});
+
+socket.on('disconnect', function() {
+  if (addedUser) {
+    --numUsers;
+
+    socket.broadcast.emit('user left', {
+      username: socket.username,
+      numUsers: numUsers
     });
+  }
+});
+});
 
-    io.emit('some event', { for: 'everyone' });
-
-    io.on('connection', function(socket) {
-      console.log('a user connected');
-      var addedUser = false;
-
-      //    socket.on('chat message', function(msg) {
-      //    io.emit('chat message', msg);
-      //});
-
-      socket.on('new message', function(data) {
-        io.emit('new message', data);//{
-        //			username: socket.username,
-        //			message: data
-        //		});
-      });
-
-    socket.on('add user', function(username) {
-      if(addedUser)
-        return;
-
-      socket.username = username;
-      numUsers++;
-      addedUser = true;
-      socket.emit('login', {
-        numUsers: numUsers
-      });
-
-      socket.broadcast.emit('user joined', {
-        username: socket.username,
-        numUser: numUsers
-      });
-    });
-
-    socket.on('typing', function() {
-      socket.broadcast.emit('typing', {
-        username: socket.username
-      });
-    });
-
-    socket.on('stop typing', function() {
-      socket.broadcast.emit('stop typing', {
-        username: socket.username
-      });
-    });
-
-    socket.on('disconnect', function() {
-      if (addedUser) {
-        --numUsers;
-
-        socket.broadcast.emit('user left', {
-          username: socket.username,
-          numUsers: numUsers
-        });
-      }
-    });
-    });
-
-    http.listen(8080, function() {
-      console.log('listening on *:' + 8080);
-    });
+http.listen(8080, function() {
+  console.log('listening on *:' + 8080);
+});
 
