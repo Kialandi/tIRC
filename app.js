@@ -44,7 +44,7 @@ var isMatch;
 app.post('/register', function(req, res) {
 		var userInput = req.body.user;
 		var pwInput = req.body.password;
-		console.log("Register: username: " + userInput + ", password: " + pwInput);
+		console.log("Register: username: " + userInput);// + ", password: " + pwInput);
 		var newUser = new User({
 			username: userInput,
 			password: pwInput
@@ -68,7 +68,7 @@ app.post('/login', function(req, res) {
 	var userInput = req.body.user;
 	var pwInput = req.body.password;
 	var user;
-	console.log("Login: username: " + userInput + ", password: " + pwInput);
+	console.log("Login: username: " + userInput);// + ", password: " + pwInput);
 	User.findOne({ username: userInput }, function(err, user) {
 		if (err) {//check if query success
 			//console.log("username: " + userInput + " doesn't exist!");
@@ -76,19 +76,19 @@ app.post('/login', function(req, res) {
 			res.end("BIGERROR");
 			//res.end("DNE");
 		}
-		else { //if it exists, check the password
-			if (user) {
+		else { //query success
+			if (user) {//if user exists
 				user.comparePassword(pwInput, function(err, isMatch) {
-					if (err) { //if invalid pw
+					if (err) { //query failed
 						console.log("Something went wrong with " + userInput + "'s request");
 						res.end("BIGERROR");
 					}
-					else if (isMatch) {
-						console.log("Password accepted for " + userInput);
+					else if (isMatch) {//if valid pw
+						console.log(userInput + ": logged in");
 						res.end("success");
 					} 
-					else if (!isMatch) {
-						console.log("Incorrect password for " + userInput);
+					else if (!isMatch) {//if invalid pw
+						console.log(userInput + ": wrong password");
 						res.end("wrongPW");
 					}
 				});
@@ -107,21 +107,21 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 // print a message when the server starts listening
 console.log("server starting on " + appEnv.url + ", port number " + appEnv.port);
 });
- */
+*/
 var numUsers = 0;
 
 app.get('/', function(req, res) {
 		res.sendfile('index.html');
 		});
 
-io.emit('some event', { for: 'everyone' });
+//io.emit('some event', { for: 'everyone' });
 
 io.on('connection', function(socket) {
 		console.log('a user connected');
 		var addedUser = false;
 
-		//    socket.on('chat message', function(msg) {
-		//    io.emit('chat message', msg);
+		//    socket.on('new message', function(msg) {
+		//    io.emit('new message', msg);
 		//});
 
 		socket.on('new message', function(data) {
@@ -139,8 +139,8 @@ socket.on('add user', function(username) {
 		numUsers++;
 		addedUser = true;
 		socket.emit('login', {
-numUsers: numUsers
-});
+			numUsers: numUsers
+		});
 
 		socket.broadcast.emit('user joined', {
 username: socket.username,
