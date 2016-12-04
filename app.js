@@ -44,7 +44,7 @@ var isMatch;
 app.post('/register', function(req, res) {
 		var userInput = req.body.user;
 		var pwInput = req.body.password;
-		console.log("username = " + userInput + ", password is " + pwInput);
+		console.log("Register: username: " + userInput + ", password: " + pwInput);
 		var newUser = new User({
 			username: userInput,
 			password: pwInput
@@ -68,7 +68,7 @@ app.post('/login', function(req, res) {
 	var userInput = req.body.user;
 	var pwInput = req.body.password;
 	var user;
-	console.log("in login: username: " + userInput + ", password: " + pwInput);
+	console.log("Login: username: " + userInput + ", password: " + pwInput);
 	User.findOne({ username: userInput }, function(err, user) {
 		if (err) {//check if query success
 			//console.log("username: " + userInput + " doesn't exist!");
