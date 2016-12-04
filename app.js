@@ -14,11 +14,13 @@ var cfenv = require('cfenv');
 
 // create a new express server
 var app = express();
-
+var bodyParser = require("body-parser");
 var http = require('http').Server(app);
 
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
@@ -28,45 +30,20 @@ var appEnv = cfenv.getAppEnv();
 
 var io = require('socket.io')(http);
 
-//sets up mongo for database management
-var mongoose = require('mongoose'),
-	User = require('./model/schema/userSchema');//add more after this is you need more schemas
-
-mongoose.Promise = global.Promise;
-
-var connStr = "mongodb://tirc:tircpwpurdue@ds117348.mlab.com:17348/tircdb";
-
-var db = mongoose.connect(connStr, function(err) {
-	if (err) throw err;
-	console.log('Successfully connected to MongoDB');
+//implement compare password
+app.post('/login', function(req, res) {
+	var user_name = req.body.user;
+	var password = req.body.password;
+	console.log("username = " + user_name ", password is " + password);
+	res.end("yes");
 });
 
-var userInput = "u2112ser";//accepts user input
-var pwInput = "password";//accepts user input
-
-//create user
-var newUser = new User({
-	username: userInput,
-	password: pwInput
-});
-
-newUser.save(function(err) {
-	if (err) throw err;
-	
-	//fetch user
-	User.findOne({ username: userInput }, function(err, user) {
-		if(err) throw err;
-		
-		//check pw
-		user.comparePassword(pwInput, function(err, isMatch) {
-			if (err) throw err;
-			console.log(pwInput, isMatch);//password is a match
-			if (isMatch)
-				return true;
-			else return false;
-		});
-
-	});
+//implement adding to db
+app.post('/register', function(req, res) {
+	var user_name = req.body.user;
+	var password = req.body.password;
+	console.log("username = " + user_name ", password is " + password);
+	res.end("yes");
 });
 
 // start server on the specified port and binding host
