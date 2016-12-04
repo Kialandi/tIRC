@@ -1,12 +1,11 @@
-
 $(document).ready(function(){
   var user,pass;
     
-    $("login-submit").click(function(){
+    $("#login-submit").click(function(){
     user=$("#login-username").val();
     pass=$("#login-password").val();
-    $.post("http://localhost:8080/register",{user: user,password: pass}, function(data){
-      console.log(data);
+    $.post("http://localhost:8080/login",{user: user,password: pass}, function(data){
+      
       if (data === 'success') {
         window.location.replace("http://localhost:8080/chat.html");
       } else if (data === 'DNE') {
@@ -14,11 +13,11 @@ $(document).ready(function(){
       } else if (data === 'wrongPW') {
 		alert("Bro, are you for real? Please TENACIOUSLY try to remember your password!");
       } else {
-      		alert("This shouldn't have happened... We will TENACIOUSLY try to fix it!! Come back later and try again :)");
+      		alert("This shouldn't have happened... We will TENACIOUSLY try to fix it!! Come back later and try again :\)");
       }
     });
   });
- /* 
+  
   $("#register-submit").click(function(){
     user=$("#login-username").val();
     pass=$("#login-password").val();
@@ -30,7 +29,7 @@ $(document).ready(function(){
       else if (data === 'invalid') {
 		alert("Username already taken! Please TENACIOUSLY try again!");
       } 
-/*      else if (data === 'success') {
+      else if (data === 'success') {
         window.location.replace("http://localhost:8080/chat.html");
       } 
       else if (data === 'DNE') {
@@ -43,12 +42,13 @@ $(document).ready(function(){
       		alert("This shouldn't have happened... We will TENACIOUSLY try to fix it!! Come back later and try again :)");
       }
     });
-  });*/
+  });
 });
+
 /*
 $(document).ready(function(){
   var user,pass;
-  $("login-submit").click(function(){
+  $("#login-submit").click(function(){
     user=$("#login-username").val();
     pass=$("#login-password").val();
     $.post("http://localhost:8080/register",{user: user,password: pass}, function(data){
