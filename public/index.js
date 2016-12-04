@@ -18,10 +18,10 @@ $(document).ready(function(){
     });
   });
   
-  $("#register-submit").click(function(){
+  $("#register-form-link").click(function(){
     user=$("#login-username").val();
     pass=$("#login-password").val();
-    $.post("http://localhost:8080/login",{user: user,password: pass}, function(data){
+    $.post("http://localhost:8080/register",{user: user,password: pass}, function(data){
       if (data === 'valid')
       {
 	  	alert("Registration success! Welcome to tIRC " + user + "!");
