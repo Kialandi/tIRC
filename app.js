@@ -29,6 +29,7 @@ var appEnv = cfenv.getAppEnv();
 //var io = require('http').createServer(app);
 
 var io = require('socket.io')(http);
+<<<<<<< HEAD
 var mongoose = require('moongose.js');
 
 //implement compare password
@@ -127,7 +128,7 @@ io.on('connection', function(socket) {
 	});
 });
 
-http.listen(appEnv.port, function() {
+http.listen(8080, function() {
 	console.log('listening on *:' + appEnv.port);
 });
 
