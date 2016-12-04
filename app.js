@@ -35,7 +35,7 @@ var mongoose = require('moongose.js');
 app.post('/login', function(req, res) {
 	var user_name = req.body.user;
 	var password = req.body.password;
-	console.log("username = " + user_name ", password is " + password);
+	console.log("success");//"username = " +user_name ", password is " +password);
 	mongoose.sendToDB(user_name, password, success);
 	
 	if (success)
@@ -48,7 +48,7 @@ app.post('/login', function(req, res) {
 app.post('/register', function(req, res) {
 	var user_name = req.body.user;
 	var password = req.body.password;
-	console.log("username = " + user_name ", password is " + password);
+	console.log("success");//"username = " + user_name ", password is " + password);
 	mongoose.checkLogin(userInput, pwInput, success);
 
 	if (success)
