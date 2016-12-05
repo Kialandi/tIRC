@@ -8,7 +8,7 @@ $(document).ready(function(){
     $.post("/login",{user: user,password: pass}, function(data){
       if (data === 'success') {
 		alert("Login successful! Welcome back to tIRC " + user + "!");
-		window.location.replace(window.location.href + window.location.port + "/chat.html");
+		window.location.replace(window.location.href + window.location.port + "chat.html");
       } 
 	  else if (data === 'DNE') {
 		alert("We can't seem to find that user... Please TENACIOUSLY try again!");
@@ -28,7 +28,7 @@ $(document).ready(function(){
     $.post("/register",{user: user,password: pass}, function(data){
       if (data === 'valid') {
 			alert("Registration success! Welcome to tIRC " + user + "!");
-			window.location.replace(window.location.href + window.location.port + "/chat.html");
+			window.location.replace(window.location.href + window.location.port + "chat.html");
 	  } 
       else if (data === 'invalid') {
 		alert("Username already taken! Please TENACIOUSLY try again!");
