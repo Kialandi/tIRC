@@ -184,7 +184,7 @@ io.on('connection', function(socket) {
 	});
 });
 
-http.listen(appEnv.VCAP_APP_PORT || 8080, function() {
-		console.log('listening on *:' + appEnv.VCAP_APP_PORT " or 8080 ");
+http.listen(appEnv.port || 8080, appEnv.bind,  function() {
+		console.log('server starting on ' + appEnv.url);
 		});
 
