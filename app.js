@@ -121,25 +121,39 @@ app.get('/', function(req, res) {
 	res.sendfile('index.html');
 });
 
+app.get('/chat.html', function(req, res) {
+	res.sendfile('index.html');
+});
+
 //io.emit('some event', { for: 'everyone' });
 
 io.on('connection', function(socket) {
 	console.log(userLogin + ' connected');
-	var addedUser = false;
+	//var addedUser = false;
 	
+	if (!userLogin) {
+		var errorMSG = 'Please TENACIOUSLY login first!';
+		socket.emit('please login', {
+			message: errorMSG
+		});
+		socket.disconnect();
+	}
 	socket.username = userLogin;
 	numUsers++;
-	
+
 	socket.broadcast.emit('user joined', {
 		username: socket.username,
 		numUser: numUsers
 	});
 
 	socket.on('new message', function(data) {
-		io.emit('new message', {
-			username: socket.username,
-			message: data
-		});
+		if (socket.username) {
+			io.emit('new message', {
+				username: socket.username,
+				message: data
+			});
+		}
+		else ;
 	});
 
 	socket.on('add user', function(username) {
@@ -173,14 +187,14 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('disconnect', function() {
-		if (addedUser) {
+		//if (addedUser) {
 			--numUsers;
 
 			socket.broadcast.emit('user left', {
 				username: socket.username,
 				numUsers: numUsers
 			});
-		}
+		//}
 	});
 });
 

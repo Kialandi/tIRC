@@ -15,14 +15,30 @@ $('form').submit(function(){
 });
 
 socket.on('new message', function(data){
-	var userAndMsg = data.username + ':  ' + data.message;
-	$('#messages').append($('<li>').text(userAndMsg));
+	if (data.username) {
+		var userAndMsg = data.username + ':  ' + data.message;
+		$('#messages').append($('<li>').text(userAndMsg));
+	}
+	else ;//do nothing if the person connected isn't logged in
 });
 
 socket.on('user joined', function(data) {
-	if (data) {
-		var logStr = data.username + ' has arrived!';
+	if (data.username) {
+		var logStr = '----------------------     ' + data.username + ' has arrived!     ---------------------';
 		$('#messages').append($('<li>').text(logStr));
 	}
 	else ;
+});
+
+socket.on('user left', function(data) {
+	if (data.username) {
+		var logStr = '---------------------     ' + data.username + ' has left!     ---------------------';
+		$('#messages').append($('<li>').text(logStr));
+	}
+	else ;
+});
+
+socket.on('please login', function(data) {
+	alert(data.message);
+	window.location.replace('/index.html');
 });
