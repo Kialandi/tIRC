@@ -198,7 +198,7 @@ io.on('connection', function(socket) {
 	});
 });
 
-http.listen(8080, function() {
-	console.log('listening on *:' + 8080);
+http.listen(appEnv.port || 8080, appEnv.bind, function() {
+	console.log('server starting on ' + appEnv.url);
 });
 
