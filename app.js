@@ -136,10 +136,10 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('new message', function(data) {
-		io.emit('new message', data);//{
-		//			username: socket.username,
-		//			message: data
-		//		});
+		io.emit('new message', {
+			username: socket.username,
+			message: data
+		});
 	});
 
 	socket.on('add user', function(username) {
