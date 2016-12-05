@@ -144,7 +144,7 @@ io.on('connection', function(socket) {
 
 	socket.on('add user', function(username) {
 		console.log("add user called");
-/*		if(addedUser)
+		if(addedUser)
 			return;
 
 		socket.username = username;
@@ -157,7 +157,7 @@ io.on('connection', function(socket) {
 		socket.broadcast.emit('user joined', {
 			username: socket.username,
 			numUser: numUsers
-		});*/
+		});
 	});
 
 	socket.on('typing', function() {

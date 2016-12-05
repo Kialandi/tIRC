@@ -1,9 +1,12 @@
 var socket = io();
-
-function log (message) {
-	socket.emit('logs', message);
+/*
+function log (msg) {
+	socket.emit('new message', {
+		message: msg,
+		logFlag: 'yes'
+	});
 }
-
+*/
 $('form').submit(function(){
   var sendStr = $('#m').val();
   socket.emit('new message', sendStr);//$('#m').val());
@@ -12,21 +15,14 @@ $('form').submit(function(){
 });
 
 socket.on('new message', function(data){
-	if (!data.username) {
-		$('#messages').append($('<li>').text(data.message));
-	}
-	else {
-		var userAndMsg = data.username + ':  ' + data.message;
-		$('#messages').append($('<li>').text(userAndMsg));
-	}
+	var userAndMsg = data.username + ':  ' + data.message;
+	$('#messages').append($('<li>').text(userAndMsg));
 });
 
-socket.on('logs', function(data) {
-	$('#messages').append($('<li>').text(data));//appends to the current entire chat
-}
-
 socket.on('user joined', function(data) {
-	if (data)
-		log('	' + data.username + ' has arrived');
+	if (data) {
+		var logStr = data.username + ' has arrived!';
+		$('#messages').append($('<li>').text(logStr));
+	}
 	else ;
 });
