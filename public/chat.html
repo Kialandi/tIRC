@@ -20,22 +20,6 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-
-<!--    
     <script src="/chat.js"></script>
-    uncomment this to implement fancier version
--->
-
-    <script>
-var socket = io();
-$('form').submit(function(){
-  socket.emit('new message', $('#m').val());
-  $('#m').val('');
-  return false;
-});
-socket.on('new message', function(msg){
-  $('#messages').append($('<li>').text(msg));
-});
-    </script>
   </body>
 </html>

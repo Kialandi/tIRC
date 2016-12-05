@@ -39,16 +39,17 @@ var db = mongoose.connect(connStr, function(err) {
 		});
 
 var isMatch;
+var userLogin;
 
 //implement user registration
 app.post('/register', function(req, res) {
 		var userInput = req.body.user;
 		var pwInput = req.body.password;
-		console.log("Register: username: " + userInput + ", password: " + pwInput);
+		console.log("Register: username: " + userInput);// + ", password: " + pwInput);
 		var newUser = new User({
 			username: userInput,
 			password: pwInput
-			});
+		});
 
 		newUser.save(function(err) {
 			if (err) {
@@ -58,6 +59,7 @@ app.post('/register', function(req, res) {
 
 			else {
 				console.log("Username: " + userInput + " accepted!");
+				userLogin = userInput;
 				res.end("valid");
 			}
 		});
@@ -68,27 +70,26 @@ app.post('/login', function(req, res) {
 	var userInput = req.body.user;
 	var pwInput = req.body.password;
 	var user;
-	console.log("Login: username: " + userInput + ", password: " + pwInput);
+	console.log("Login: username: " + userInput);// + ", password: " + pwInput);
 	User.findOne({ username: userInput }, function(err, user) {
 		if (err) {//check if query success
-			//console.log("username: " + userInput + " doesn't exist!");
 			console.log("Query to database failed!");
 			res.end("BIGERROR");
-			//res.end("DNE");
 		}
-		else { //if it exists, check the password
-			if (user) {
+		else { //query success
+			if (user) {//if user exists
 				user.comparePassword(pwInput, function(err, isMatch) {
-					if (err) { //if invalid pw
+					if (err) { //query failed
 						console.log("Something went wrong with " + userInput + "'s request");
 						res.end("BIGERROR");
 					}
-					else if (isMatch) {
-						console.log("Password accepted for " + userInput);
+					else if (isMatch) {//if valid pw
+						console.log(userInput + ": logged in");
+						userLogin = userInput;
 						res.end("success");
 					} 
-					else if (!isMatch) {
-						console.log("Incorrect password for " + userInput);
+					else if (!isMatch) {//if invalid pw
+						console.log(userInput + ": wrong password");
 						res.end("wrongPW");
 					}
 				});
@@ -100,76 +101,87 @@ app.post('/login', function(req, res) {
 		}
 	});
 });
-
+/*
+app.post('/adduser', function(req, res) {
+	var userInput = req.body.user;
+	res.end("added");//reply with added to client
+	
+});
+*/
 /*
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
 // print a message when the server starts listening
 console.log("server starting on " + appEnv.url + ", port number " + appEnv.port);
 });
- */
+*/
 var numUsers = 0;
 
 app.get('/', function(req, res) {
-		res.sendfile('index.html');
-		});
+	res.sendfile('index.html');
+});
 
-io.emit('some event', { for: 'everyone' });
+//io.emit('some event', { for: 'everyone' });
 
 io.on('connection', function(socket) {
-		console.log('a user connected');
-		var addedUser = false;
+	console.log(userLogin + ' connected');
+	var addedUser = false;
+	
+	socket.username = userLogin;
+	numUsers++;
+	
+	socket.broadcast.emit('user joined', {
+		username: socket.username,
+		numUser: numUsers
+	});
 
-		//    socket.on('chat message', function(msg) {
-		//    io.emit('chat message', msg);
-		//});
-
-		socket.on('new message', function(data) {
-				io.emit('new message', data);//{
-				//			username: socket.username,
-				//			message: data
-				//		});
+	socket.on('new message', function(data) {
+		io.emit('new message', {
+			username: socket.username,
+			message: data
 		});
+	});
 
-socket.on('add user', function(username) {
+	socket.on('add user', function(username) {
+		console.log("add user called");
 		if(addedUser)
-		return;
+			return;
 
 		socket.username = username;
 		numUsers++;
 		addedUser = true;
-		socket.emit('login', {
-numUsers: numUsers
-});
+		//		socket.emit('login', {
+		//			numUsers: numUsers
+		//		});
 
 		socket.broadcast.emit('user joined', {
-username: socket.username,
-numUser: numUsers
-});
+			username: socket.username,
+			numUser: numUsers
 		});
+	});
 
-socket.on('typing', function() {
+	socket.on('typing', function() {
 		socket.broadcast.emit('typing', {
-username: socket.username
-});
+			username: socket.username
 		});
+	});
 
-socket.on('stop typing', function() {
+	socket.on('stop typing', function() {
 		socket.broadcast.emit('stop typing', {
-username: socket.username
-});
+			username: socket.username
 		});
+	});
 
-socket.on('disconnect', function() {
+	socket.on('disconnect', function() {
 		if (addedUser) {
-		--numUsers;
+			--numUsers;
 
-		socket.broadcast.emit('user left', {
-username: socket.username,
-numUsers: numUsers
-});
+			socket.broadcast.emit('user left', {
+				username: socket.username,
+				numUsers: numUsers
+			});
 		}
-		});
+	});
 });
 
 http.listen(appEnv.VCAP_APP_PORT || 8080, function() {
